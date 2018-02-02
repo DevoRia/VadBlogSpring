@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>VadBlog</title>
+    <link rel="stylesheet" href="src/css/style.css">
+  </head>
+  <body>
+    <header>
+        <h1><a href="#">VadBlog</a></h1>
+    </header>
+    <div id="content">
+      <input id="add" class="buttons" type="button" name="creating" value="Додати новий пост">
+      <div id="app">
+        <div class="blog" v-for="note in notes">
+          <h1 ><a v-on:click="show = !show">{{note.title}}</a></h1>
+          <h2>{{note.author}} | {{note.date}}</h2>
+          <hr>
+          <p v-if="show">{{note.text}}</p>
+        </div>
+      </div>
+    </div>
+    <script src="/dist/build.js"></script>
+  </body>
+</html>
