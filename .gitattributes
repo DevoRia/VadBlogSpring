@@ -1,3 +1,2 @@
 # Auto detect text files and perform LF normalization
-* rb linguist-language=Java
-* rb linguist-language=JavaScript
+* rb linguist-language=Java,JavaScript
