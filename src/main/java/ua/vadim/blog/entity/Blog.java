@@ -1,6 +1,8 @@
 package ua.vadim.blog.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,7 +12,10 @@ import java.util.Date;
 @Table(name = "blogs")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Blog {
+
 
     @Id
     @Column
@@ -29,5 +34,7 @@ public class Blog {
     @Column
     private Date date;
 
+    @Column
+    private Boolean visiable;
 
 }

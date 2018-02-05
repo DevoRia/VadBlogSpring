@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.vadim.blog.entity.Blog;
 import ua.vadim.blog.service.BlogService;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -27,19 +28,27 @@ public class BlogController implements ControllerBehavior{
         return blogService.getAllBlogs();
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @Override
-    public String addBlog(@ModelAttribute("blog")Blog blog) {
+    public String addBlog(@ModelAttribute("title")String title,
+                          @ModelAttribute("author") String author,
+                          @ModelAttribute("text") String text) {
+
+        Blog blog = new Blog(null, title, author, text, new Date(), false);
         this.blogService.addBlog(blog);
+
         return "redirect:/";
     }
 
+    @CrossOrigin
     @Override
     public String updateBlog(Blog blog) {
         //TODO NEED TO BE WRITTEN
         return null;
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/remove/{id}")
     public String removeBlog(@PathVariable("id") long id){
         this.blogService.removeBlog(id);
