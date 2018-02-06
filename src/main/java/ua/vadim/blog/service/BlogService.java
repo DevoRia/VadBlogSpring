@@ -29,7 +29,7 @@ public class BlogService implements BlogBehavior {
     @Transactional
     @Override
     public void updateBlog(Blog blog) {
-        //TODO NEED TO BE WRITTEN
+        blogRepository.save(blog);
     }
 
     @Transactional
@@ -47,8 +47,7 @@ public class BlogService implements BlogBehavior {
     @Transactional
     @Override
         public List<Blog> getAllBlogs() {
-        List<Blog> list = Lists.newArrayList(blogRepository.findAll());
-        return list;
+        return Lists.newArrayList(blogRepository.findAll());
     }
 
 

@@ -6,11 +6,14 @@ Vue.use(VueResource);
 Vue.component("editable",{
   template: '<a @click="getId" >Редагувати</a>',
   props: {
-    element: Number //note.id
+    element: Number, //note.id
+    title: String,
+    author: String,
+    text: String
   },
   methods:{
     getId: function () {
-      this.$emit('id', this.element, 'edit') //передає елемент в transferElement
+      this.$emit('id', this.element, 'edit', this.title, this.author, this.text) //передає елемент в transferElement
     }
   }
 });
@@ -22,7 +25,7 @@ Vue.component('removable',{
   },
   methods:{
     getId: function () {
-      this.$emit('id', this.element, 'delete') //передає елемент в transferElement
+      this.$emit('id', this.element, 'delete', null, null, null) //передає елемент в transferElement
     }
   }
 });
@@ -37,43 +40,70 @@ Vue.component('modal', {
   }
 });
 
-Vue.component('modal-edit', {
-  template: '#modal-template-edit'
+var EditModal = Vue.component('modal-edit', {
+  template: '#modal-template-edit',
+  data:function(){
+    return{
+    title: App.title,
+    author: App.author,
+    text: App.text
+  }},
+  methods:{
+    editOnClick: function () {
+      this.$emit('edit-method', this.title, this.author, this.text);//викликає метод editPost
+      this.$emit('close');//вікно ховається
+    },
+  }
 });
 
 Vue.component('modal-add',{
   template: '#modal-template-add',
-  data:{
-    title: String,
-    author: String,
-    text: String
-  },
+  data: function () {
+    return {
+      title: "",
+      author: "",
+      text: ""
+      }
+    },
   methods:{
     addOnClick: function () {
       this.$emit('add', this.title, this.author, this.text);//викликає метод addPost
       this.$emit('close');//вікно ховається
     }
   }
-
 });
 
-new Vue({
+var App = new Vue({
   el: '#app',
   data: {
   	endpoint: "http://localhost:8081/server/show",
     removeEndpoint: "http://localhost:8081/server/remove/",
     addEndpoint: "http://localhost:8081/server/add",
+    editEndpoint: "http://localhost:8081/server/edit",
     elementData: 0, //id будь-якого поста
     notes: [],
     showRemoveDialog: false, // видимість діалогового вікна для видалення
     showAddDialog: false,// видимість діалогового вікна для додавання
-    showEditDialog: false// видимість діалогового вікна для редагування
+    showEditDialog: false,// видимість діалогового вікна для редагування
+    title: "",//використовуються для edit
+    author: "",
+    text: ""
+  },
+  components:{
+    EditModal
   },
   methods:{
-
   	getAllPosts: function(){
   		 this.$http.get(this.endpoint).then(function (response){//отримуємо весь список з бек-енда
          this.notes = response.data;
+         this.notes.forEach(function (note, i, notes) {//Перетворюємо формат дати
+           let date = new Date(note.date);
+           notes[i].date = (date.getDate() > 10 ? date.getDate() : "0" +date.getDate())  +
+             "-" + ((date.getMonth() + 1)> 10 ? (date.getMonth() + 1) : "0" +(date.getMonth() + 1)) +
+             "-" + date.getFullYear() +
+             " " + (date.getHours()> 10 ? date.getHours() : "0" + date.getHours()) +
+             ":" + (date.getMinutes() > 10 ? date.getMinutes() : "0" + date.getMinutes());
+         })
          }, function (error) {
   		      console.log("Неможливо отримати данні. Помилка: " + error.data);
          })
@@ -82,11 +112,9 @@ new Vue({
   	  let removeEndpoint = this.removeEndpoint + this.elementData;//конкантинуємо повне посилання
       this.$http.get(removeEndpoint).then(function (response) {
         location.reload(true);//перезавантаження сторінки...
-      }, function (error) {
-
-      });
+      }, function (error) {/*Помилка */});
     },
-    transferElement: function (element, key) {
+    transferElement: function (element, key, title, author, text) {
       this.elementData = element; //зберігає id в цьому об'єкті
       switch (key) {
         case 'delete':
@@ -94,24 +122,32 @@ new Vue({
           break;
         case 'edit':
           this.showEditDialog = true;
+          this.title = title;
+          this.author = author;
+          this.text = text;
           break;
       }
     },
     addPost: function (title, author, text) {
-  	  console.log(title + author + text);
-  	  var body = new FormData();//JSON не валідується, використовуємо цей об'єкт
+      let body = new FormData();//JSON не валідується, використовуємо цей об'єкт
   	  body.append('title', title);
   	  body.append('author', author);
   	  body.append('text', text);
       this.$http.post(this.addEndpoint, body).then(function (response) {
+        location.reload(true);//перезавантаження сторінки...
+      }, function (error) {/*Помилка */})
+    },
+    editPost: function (title, author, text) {
+  	  let body = new FormData();
+  	  body.append('id', this.elementData);
+      body.append('title', title);
+      body.append('author', author);
+      body.append('text', text);
+      this.$http.post(this.editEndpoint, body).then(function (response) {
         location.reload(true);
-      }, function (error) {
-
-      })
+      }, function (error) {/*Помилка */})
     }
-
-
-  	},
+  },
   created: function () {
      this.getAllPosts();
   }

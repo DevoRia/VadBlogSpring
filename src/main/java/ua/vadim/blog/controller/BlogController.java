@@ -42,10 +42,16 @@ public class BlogController implements ControllerBehavior{
     }
 
     @CrossOrigin
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @Override
-    public String updateBlog(Blog blog) {
-        //TODO NEED TO BE WRITTEN
-        return null;
+    public String updateBlog(@ModelAttribute("id") long id,
+                             @ModelAttribute("title") String title,
+                             @ModelAttribute("author") String author,
+                             @ModelAttribute("text") String text) {
+        Blog oldBlog = blogService.getBlogById(id);
+        Blog blog = new Blog(id, title, author, text, oldBlog.getDate(), false);
+        this.blogService.updateBlog(blog);
+        return "redirect:/";
     }
 
     @CrossOrigin
