@@ -35,7 +35,7 @@ public class BlogController implements ControllerBehavior{
                           @ModelAttribute("author") String author,
                           @ModelAttribute("text") String text) {
 
-        Blog blog = new Blog(null, title, author, text, new Date(), false);
+        Blog blog = new Blog(title, author, text, new Date(), false);//lombock сам створить конструктор
         this.blogService.addBlog(blog);
 
         return "redirect:/";
@@ -44,20 +44,19 @@ public class BlogController implements ControllerBehavior{
     @CrossOrigin
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @Override
-    public String updateBlog(@ModelAttribute("id") long id,
-                             @ModelAttribute("title") String title,
+    public String updateBlog(@ModelAttribute("title") String title,
                              @ModelAttribute("author") String author,
                              @ModelAttribute("text") String text) {
-        Blog oldBlog = blogService.getBlogById(id);
-        Blog blog = new Blog(id, title, author, text, oldBlog.getDate(), false);
+        Blog oldBlog = blogService.getBlogByTitle(title);
+        Blog blog = new Blog(title, author, text, oldBlog.getDate(), false);//lombock сам створить конструктор
         this.blogService.updateBlog(blog);
         return "redirect:/";
     }
 
     @CrossOrigin
     @RequestMapping(value = "/remove/{id}")
-    public String removeBlog(@PathVariable("id") long id){
-        this.blogService.removeBlog(id);
+    public String removeBlog(@PathVariable("id") String title){
+        this.blogService.removeBlog(title);
         return "redirect:/";
     }
 

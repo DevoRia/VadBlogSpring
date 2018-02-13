@@ -17,9 +17,9 @@
           <h2>{{note.author}} | {{note.date}}</h2>
           <div id="functions">
             <h2>
-              <editable @id="transferElement" :element="note.id" :author="note.author" :title="note.title" :text="note.text"></editable>
+              <editable @id="transferElement" :author="note.author" :title="note.title" :text="note.text"></editable>
               |
-              <removable @id="transferElement" :element="note.id"></removable>
+              <removable @id="transferElement" :title="note.title"></removable>
             </h2>
           </div>
           <hr>
@@ -46,7 +46,7 @@
               <div class="modal-body">
                 <slot name="body">
                   Назва:<br>
-                  <input type="text" name="title" v-model="title" ><br>
+                  <input type="text" name="title"  v-model="title" disabled><br>
                   Ваше ім'я: <br>
                   <input type="text" name="author"  v-model="author"><br>
                   Запис:<br>

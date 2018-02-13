@@ -6,14 +6,14 @@ Vue.use(VueResource);
 Vue.component("editable",{
   template: '<a @click="getId" >Редагувати</a>',
   props: {
-    element: Number, //note.id
+    //element: Number, //note.id
     title: String,
     author: String,
     text: String
   },
   methods:{
     getId: function () {
-      this.$emit('id', this.element, 'edit', this.title, this.author, this.text) //передає елемент в transferElement
+      this.$emit('id', 'edit', this.title, this.author, this.text) //передає елемент в transferElement
     }
   }
 });
@@ -21,11 +21,11 @@ Vue.component("editable",{
 Vue.component('removable',{
   template: '<a @click="getId" >Видалити</a>',
   props: {
-    element: Number //note.id
+    title: String //note.id
   },
   methods:{
     getId: function () {
-      this.$emit('id', this.element, 'delete', null, null, null) //передає елемент в transferElement
+      this.$emit('id', 'delete', this.title, null, null, null) //передає елемент в transferElement
     }
   }
 });
@@ -80,12 +80,13 @@ var App = new Vue({
     removeEndpoint: "http://localhost:8081/server/remove/",
     addEndpoint: "http://localhost:8081/server/add",
     editEndpoint: "http://localhost:8081/server/edit",
-    elementData: 0, //id будь-якого поста
+    //elementData: 0, //id будь-якого поста
     notes: [],
     showRemoveDialog: false, // видимість діалогового вікна для видалення
     showAddDialog: false,// видимість діалогового вікна для додавання
     showEditDialog: false,// видимість діалогового вікна для редагування
-    title: "",//використовуються для edit
+    oldTitle: "",
+    title: "",
     author: "",
     text: ""
   },
@@ -109,13 +110,13 @@ var App = new Vue({
          })
   	},
     removeById: function () {
-  	  let removeEndpoint = this.removeEndpoint + this.elementData;//конкантинуємо повне посилання
+  	  let removeEndpoint = this.removeEndpoint + this.title;//конкантинуємо повне посилання
       this.$http.get(removeEndpoint).then(function (response) {
         location.reload(true);//перезавантаження сторінки...
       }, function (error) {/*Помилка */});
     },
-    transferElement: function (element, key, title, author, text) {
-      this.elementData = element; //зберігає id в цьому об'єкті
+    transferElement: function (key, title, author, text) {
+      this.title = title; //зберігає id в цьому об'єкті
       switch (key) {
         case 'delete':
           this.showRemoveDialog = true; //показує вікно
@@ -139,7 +140,6 @@ var App = new Vue({
     },
     editPost: function (title, author, text) {
   	  let body = new FormData();
-  	  body.append('id', this.elementData);
       body.append('title', title);
       body.append('author', author);
       body.append('text', text);

@@ -34,14 +34,14 @@ public class BlogService implements BlogBehavior {
 
     @Transactional
     @Override
-    public void removeBlog(long id) {
-        blogRepository.delete(id);
+    public void removeBlog(String title) {
+        blogRepository.delete(title);
     }
 
     @Transactional
     @Override
-    public Blog getBlogById(long id) {
-        return blogRepository.findOne(id);
+    public Blog getBlogByTitle(String title) {
+        return blogRepository.findOne(title);
     }
 
     @Transactional

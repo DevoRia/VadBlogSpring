@@ -11,7 +11,7 @@ import java.util.List;
 public interface ControllerBehavior {
 
     String addBlog(String title, String author, String text);
-    String updateBlog(long id, String title, String author, String text);
-    String removeBlog(long id);
+    String updateBlog(String title, String author, String text);
+    String removeBlog(String title);
     List<Blog> getAllBlogs();
 }

@@ -4,12 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "blogs")
+//@Entity
+//@Table(name = "blogs")
+@Document
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,23 +21,23 @@ public class Blog {
 
 
     @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    //@Column
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    //private Long id;
 
-    @Column
+    //@Column
     private String title;
 
-    @Column
+    //@Column
     private String author;
 
-    @Column
+    //@Column
     private String text;
 
-    @Column
+    //@Column
     private Date date;
 
-    @Column
+    //@Column
     private Boolean visiable;
 
 }
