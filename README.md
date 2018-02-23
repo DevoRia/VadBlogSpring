@@ -3,7 +3,7 @@ Java Spring Boot + Vue.js project
 
 ## How run it?
 
-### Backend:
+### Backend + Frontend:
 * Export project
 * Create Running for project 
 	* Click "edit configuration" 
@@ -16,19 +16,15 @@ Java Spring Boot + Vue.js project
   ![alt text](PicturesRM/set_config.PNG)
 
 
-### Frontend
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
 ```
 ### DataBase
 ``` bash
 # Write in terminal
 .../MongoDB/bin/mongod
+```
+### Keycloak server
+``` bash
+# Download Keycloak server from official site. unzip it, then 
+# Write in terminal
+.../keycloak-3.4.3.Final/bin/standalone.bat -Djboss.socket.binding.port-offset=100
 ```
