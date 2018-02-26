@@ -1,7 +1,7 @@
 package ua.vadim.blog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 import ua.vadim.blog.entity.Blog;
 import ua.vadim.blog.service.BlogService;
@@ -10,9 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@RefreshScope
 @RequestMapping("/server")
 public class BlogController implements ControllerBehavior{
-
 
     private BlogService blogService;
 
