@@ -15,7 +15,7 @@ Java Spring Boot + Vue.js project
 	![alt text](PicturesRM/new_spring.PNG)
   ![alt text](PicturesRM/set_config.PNG)
   
-  do it for ConfigServer too.
+  do it for ConfigServer and GRpcClient too.
 
 
 
