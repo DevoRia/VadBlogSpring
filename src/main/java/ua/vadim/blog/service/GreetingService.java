@@ -2,48 +2,37 @@ package ua.vadim.blog.service;
 
 import io.grpc.stub.StreamObserver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ua.vadim.blog.GreetingGrpc;
 import ua.vadim.blog.HelloRequest;
 import ua.vadim.blog.HelloResponse;
 import ua.vadim.blog.entity.Blog;
 
-import java.util.LinkedHashSet;
-
+@Service
 public class GreetingService extends GreetingGrpc.GreetingImplBase {
-    private static LinkedHashSet<StreamObserver<HelloResponse>> observers = new LinkedHashSet<>();
 
     @Autowired
-    BlogService blogService;
+    private BlogService blogService;
 
     @Override
-    public StreamObserver<HelloRequest> greeting(StreamObserver<HelloResponse> responseObserver) {
-        observers.add(responseObserver);
-        return new StreamObserver<HelloRequest>() {
-            @Override
-            public void onNext(HelloRequest request) {
-                for (StreamObserver<HelloResponse> observer : observers) {
-                    observer.onNext(HelloResponse.newBuilder()
-                       //     .setMessage(getMessage(request.getTitle()))
-                            .setMessage(request.getTitle())
-                            .build());
-                }
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                observers.remove(responseObserver);
-            }
-
-            @Override
-            public void onCompleted() {
-                observers.remove(responseObserver);
-
-            }
-        };
+    public void greeting(HelloRequest request, StreamObserver<HelloResponse> responseObserver) {
+        System.out.println("GRPC Request: " + request.getTitle());
+        //Функції callback
+        responseObserver.onNext(HelloResponse.newBuilder()
+                .setMessage(getMessage(request.getTitle()))
+                .build());
+        //Обов'язково використовуємо метод onCompleted щоб програма не зациклювалась на методі onNext
+        responseObserver.onCompleted();
     }
 
     private String getMessage (String title) {
-        Blog blog = blogService.getBlogByTitle(title);
+        //Дістаємо автора та текст за заголовком з бази
+        Blog blog;
+        try {
+            blog = this.blogService.getBlogByTitle(title);
+        } catch (NullPointerException e){
+            return "Нічого не знайдено";
+        }
         return blog.getTitle() + " | " + blog.getAuthor() + "\n" + blog.getText();
     }
 
