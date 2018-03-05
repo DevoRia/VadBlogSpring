@@ -22,7 +22,7 @@ public class BlogApplication {
 
 		GreetingGrpc.GreetingBlockingStub stub = GreetingGrpc.newBlockingStub(channel);//робимо канал синхронним
 		while (true) {
-			String request = reader.readLine();
+			String request = "STOP"; //reader.readLine();
 			if ("STOP".equals(request)) break;// Зупиняємо програму, якщо відправимо STOP
 			HelloResponse response = stub.greeting(HelloRequest.newBuilder()
 					.setTitle(request)
