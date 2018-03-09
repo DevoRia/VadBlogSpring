@@ -29,8 +29,7 @@ public class GrpcServer  {
                 e.printStackTrace();
             }
         });
+
         thread.start();
-
     }
-
 }

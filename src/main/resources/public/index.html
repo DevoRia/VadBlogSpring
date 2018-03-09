@@ -6,10 +6,11 @@
     <link rel="stylesheet" href="src/css/style.css">
   </head>
   <body>
-    <header>
-        <h1><a href="#">VadBlog</a></h1>
-    </header>
     <div id="app">
+      <header>
+        <h1><a href="#">VadBlog</a></h1>
+        <h2 v-model="author"></h2>
+      </header>
       <div id="content">
         <input @click="showAddDialog = true" id="add" class="buttons" type="button" name="creating" value="Додати новий пост">
         <div class="blog" v-for="note in notes">
@@ -48,7 +49,7 @@
                   Назва:<br>
                   <input type="text" name="title"  v-model="title" disabled><br>
                   Ваше ім'я: <br>
-                  <input type="text" name="author"  v-model="author"><br>
+                  <input type="text" name="author"  v-model="author" disabled><br>
                   Запис:<br>
                   <textarea cols="40" rows="3" name="text"  v-model="text"></textarea>
 
@@ -125,7 +126,7 @@
                   Назва:<br>
                   <input type="text" name="title" v-model="title"><br>
                   Ваше ім'я:<br>
-                  <input type="text" name="author" v-model="author"><br>
+                  <input type="text" name="author" v-model="author" disabled><br>
                   Запис:<br>
                   <textarea cols="40" rows="3" name="text" v-model="text"></textarea>
 

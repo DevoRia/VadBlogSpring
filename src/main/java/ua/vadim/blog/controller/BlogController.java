@@ -1,10 +1,12 @@
 package ua.vadim.blog.controller;
 
+import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 import ua.vadim.blog.entity.Blog;
 import ua.vadim.blog.service.BlogService;
+import ua.vadim.blog.service.TokenManager;
 
 import java.util.Date;
 import java.util.List;
@@ -15,25 +17,32 @@ import java.util.List;
 public class BlogController implements ControllerBehavior{
 
     private BlogService blogService;
+    private TokenManager tokenManager;
 
     @Autowired
-    public BlogController(BlogService blogService) {
+    public BlogController(BlogService blogService, TokenManager tokenManager) {
         this.blogService = blogService;
+        this.tokenManager = tokenManager;
     }
+
+
 
     @CrossOrigin //Access-Control-Allow-Origin дозволяє стороннім ресурсам брати данні
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     @Override
     public List<Blog> getAllBlogs (){
+        AccessToken accessToken = tokenManager.getAccessToken();
+        String user = accessToken.getPreferredUsername();
+        System.out.println(user);
         return blogService.getAllBlogs();
     }
 
     @CrossOrigin
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @Override
-    public String addBlog(@ModelAttribute("title")String title,
-                          @ModelAttribute("author") String author,
-                          @ModelAttribute("text") String text) {
+    public String addBlog(@ModelAttribute(value = "title")String title,
+                          @ModelAttribute(value = "author") String author,
+                          @ModelAttribute(value = "text") String text) {
 
         Blog blog = new Blog(title, author, text, new Date(), false);//lombock сам створить конструктор
         this.blogService.addBlog(blog);
@@ -44,9 +53,9 @@ public class BlogController implements ControllerBehavior{
     @CrossOrigin
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @Override
-    public String updateBlog(@ModelAttribute("title") String title,
-                             @ModelAttribute("author") String author,
-                             @ModelAttribute("text") String text) {
+    public String updateBlog(@ModelAttribute(value = "title") String title,
+                             @ModelAttribute(value = "author") String author,
+                             @ModelAttribute(value = "text") String text) {
         Blog oldBlog = blogService.getBlogByTitle(title);
         Blog blog = new Blog(title, author, text, oldBlog.getDate(), false);//lombock сам створить конструктор
         this.blogService.updateBlog(blog);

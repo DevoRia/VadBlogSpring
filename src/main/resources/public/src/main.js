@@ -3,12 +3,11 @@ Vue.component("editable",{
   props: {
     //element: Number, //note.id
     title: String,
-    author: String,
     text: String
   },
   methods:{
     getId: function () {
-      this.$emit('id', 'edit', this.title, this.author, this.text) //передає елемент в transferElement
+      this.$emit('id', 'edit', this.title, null, this.text) //передає елемент в transferElement
     }
   }
 });
@@ -56,7 +55,7 @@ Vue.component('modal-add',{
   data: function () {
     return {
       title: "",
-      author: "",
+      author: App.author,
       text: ""
       }
     },
@@ -75,7 +74,7 @@ var App = new Vue({
     removeEndpoint: "http://localhost:8081/server/remove/",
     addEndpoint: "http://localhost:8081/server/add",
     editEndpoint: "http://localhost:8081/server/edit",
-    //elementData: 0, //id будь-якого поста
+    usernameEndpoint: "http://localhost:8081/data/username",
     notes: [],
     showRemoveDialog: false, // видимість діалогового вікна для видалення
     showAddDialog: false,// видимість діалогового вікна для додавання
@@ -119,7 +118,6 @@ var App = new Vue({
         case 'edit':
           this.showEditDialog = true;
           this.title = title;
-          this.author = author;
           this.text = text;
           break;
       }
@@ -141,10 +139,16 @@ var App = new Vue({
       this.$http.post(this.editEndpoint, body).then(function (response) {
         location.reload(true);
       }, function (error) {/*Помилка */})
+    },
+    getUserData: function () {
+        this.$http.get(this.usernameEndpoint).then(function (response) {
+          this.author = response.bodyText;
+        }), function (error) {}
     }
   },
   created: function () {
      this.getAllPosts();
+     this.getUserData();
   }
 
 });
