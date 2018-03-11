@@ -1,5 +1,6 @@
 package ua.vadim.blog.controller;
 
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,8 +11,8 @@ import java.util.List;
 
 public interface ControllerBehavior {
 
-    String addBlog(String title, String author, String text);
-    String updateBlog(String title, String author, String text);
+    String addBlog(String title, String text);
+    String updateBlog(String title, String text);
     String removeBlog(String title);
     List<Blog> getAllBlogs();
 }

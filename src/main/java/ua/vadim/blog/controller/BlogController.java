@@ -1,6 +1,6 @@
 package ua.vadim.blog.controller;
 
-import org.keycloak.representations.AccessToken;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
@@ -25,48 +25,49 @@ public class BlogController implements ControllerBehavior{
         this.tokenManager = tokenManager;
     }
 
-
-
     @CrossOrigin //Access-Control-Allow-Origin дозволяє стороннім ресурсам брати данні
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     @Override
     public List<Blog> getAllBlogs (){
-        AccessToken accessToken = tokenManager.getAccessToken();
-        String user = accessToken.getPreferredUsername();
-        System.out.println(user);
-        return blogService.getAllBlogs();
+        return this.blogService.getAllBlogs();
     }
 
     @CrossOrigin
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @Override
     public String addBlog(@ModelAttribute(value = "title")String title,
-                          @ModelAttribute(value = "author") String author,
                           @ModelAttribute(value = "text") String text) {
-
+        String author = tokenManager.getUsername();
         Blog blog = new Blog(title, author, text, new Date(), false);//lombock сам створить конструктор
         this.blogService.addBlog(blog);
-
-        return "redirect:/";
+        return "Success";
     }
 
     @CrossOrigin
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @Override
     public String updateBlog(@ModelAttribute(value = "title") String title,
-                             @ModelAttribute(value = "author") String author,
                              @ModelAttribute(value = "text") String text) {
+        String author = tokenManager.getUsername();
         Blog oldBlog = blogService.getBlogByTitle(title);
+
+        if (!(author.equals(oldBlog.getAuthor()))) return "Operation can't be success";
+
         Blog blog = new Blog(title, author, text, oldBlog.getDate(), false);//lombock сам створить конструктор
         this.blogService.updateBlog(blog);
-        return "redirect:/";
+        return "Success";
     }
 
     @CrossOrigin
     @RequestMapping(value = "/remove/{id}")
     public String removeBlog(@PathVariable("id") String title){
+        String author = tokenManager.getUsername();
+        Blog oldBlog = blogService.getBlogByTitle(title);
+
+        if (!(author.equals(oldBlog.getAuthor()))) return "Operation can't be success";
+
         this.blogService.removeBlog(title);
-        return "redirect:/";
+        return "Success";
     }
 
 }

@@ -1,13 +1,12 @@
 Vue.component("editable",{
   template: '<a @click="getId" >Редагувати</a>',
   props: {
-    //element: Number, //note.id
     title: String,
     text: String
   },
   methods:{
     getId: function () {
-      this.$emit('id', 'edit', this.title, null, this.text) //передає елемент в transferElement
+      this.$emit('id', 'edit', this.title, this.text) //передає елемент в transferElement
     }
   }
 });
@@ -19,7 +18,7 @@ Vue.component('removable',{
   },
   methods:{
     getId: function () {
-      this.$emit('id', 'delete', this.title, null, null, null) //передає елемент в transferElement
+      this.$emit('id', 'delete', this.title, null) //передає елемент в transferElement
     }
   }
 });
@@ -44,7 +43,7 @@ var EditModal = Vue.component('modal-edit', {
   }},
   methods:{
     editOnClick: function () {
-      this.$emit('edit-method', this.title, this.author, this.text);//викликає метод editPost
+      this.$emit('edit-method', this.title, this.text);//викликає метод editPost
       this.$emit('close');//вікно ховається
     },
   }
@@ -61,7 +60,7 @@ Vue.component('modal-add',{
     },
   methods:{
     addOnClick: function () {
-      this.$emit('add', this.title, this.author, this.text);//викликає метод addPost
+      this.$emit('add', this.title, this.text);//викликає метод addPost
       this.$emit('close');//вікно ховається
     }
   }
@@ -75,6 +74,7 @@ var App = new Vue({
     addEndpoint: "http://localhost:8081/server/add",
     editEndpoint: "http://localhost:8081/server/edit",
     usernameEndpoint: "http://localhost:8081/data/username",
+    logoutEndpoint:"http://localhost:8081/data/logout",
     notes: [],
     showRemoveDialog: false, // видимість діалогового вікна для видалення
     showAddDialog: false,// видимість діалогового вікна для додавання
@@ -103,13 +103,8 @@ var App = new Vue({
   		      console.log("Неможливо отримати данні. Помилка: " + error.data);
          })
   	},
-    removeById: function () {
-  	  let removeEndpoint = this.removeEndpoint + this.title;//конкантинуємо повне посилання
-      this.$http.get(removeEndpoint).then(function (response) {
-        location.reload(true);//перезавантаження сторінки...
-      }, function (error) {/*Помилка */});
-    },
-    transferElement: function (key, title, author, text) {
+
+    transferElement: function (key, title, text) {
       this.title = title; //зберігає id в цьому об'єкті
       switch (key) {
         case 'delete':
@@ -122,29 +117,42 @@ var App = new Vue({
           break;
       }
     },
-    addPost: function (title, author, text) {
+
+    removeById: function () {
+  	  let removeEndpoint = this.removeEndpoint + this.title;//конкантинуємо повне посилання
+      this.$http.get(removeEndpoint).then(function (response) {
+           location.reload(true);//перезавантаження сторінки...
+      }, function (error) {/*Помилка */});
+    },
+
+    addPost: function (title, text) {
       let body = new FormData();//JSON не валідується, використовуємо цей об'єкт
   	  body.append('title', title);
-  	  body.append('author', author);
   	  body.append('text', text);
       this.$http.post(this.addEndpoint, body).then(function (response) {
         location.reload(true);//перезавантаження сторінки...
       }, function (error) {/*Помилка */})
     },
-    editPost: function (title, author, text) {
+
+    editPost: function (title, text) {
   	  let body = new FormData();
       body.append('title', title);
-      body.append('author', author);
       body.append('text', text);
       this.$http.post(this.editEndpoint, body).then(function (response) {
         location.reload(true);
       }, function (error) {/*Помилка */})
     },
+
     getUserData: function () {
-        this.$http.get(this.usernameEndpoint).then(function (response) {
-          this.author = response.bodyText;
-        }), function (error) {}
-    }
+  	  this.$http.get(this.usernameEndpoint).then(function (response) {
+  	    this.author = response.bodyText;
+  	  }), function (error) {}
+    },
+    logout: function () {
+  	  this.$http.get(this.logoutEndpoint).then(function (response) {
+  	    location.assign("http://localhost:8081/")
+      })
+    }  
   },
   created: function () {
      this.getAllPosts();

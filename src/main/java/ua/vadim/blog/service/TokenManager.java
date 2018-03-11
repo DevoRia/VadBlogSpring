@@ -1,6 +1,8 @@
 package ua.vadim.blog.service;
 
 import org.keycloak.KeycloakPrincipal;
+import org.keycloak.adapters.jetty.core.AbstractKeycloakJettyAuthenticator;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.AccessToken;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
@@ -19,10 +21,13 @@ public class TokenManager {
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST,
             proxyMode = ScopedProxyMode.TARGET_CLASS)
     public AccessToken getAccessToken() {
-        HttpServletRequest request =
-                ((ServletRequestAttributes) RequestContextHolder
-                        .currentRequestAttributes()).getRequest();
+        HttpServletRequest request = new RequestManager().getServletRequest();
         return ((KeycloakPrincipal) request.getUserPrincipal())
                 .getKeycloakSecurityContext().getToken();
+    }
+
+    public String getUsername(){
+        AccessToken token = getAccessToken();
+        return token.getPreferredUsername();
     }
 }

@@ -9,7 +9,8 @@
     <div id="app">
       <header>
         <h1><a href="#">VadBlog</a></h1>
-        <h2 v-model="author"></h2>
+        <h2><a href="#">{{author}}</a></h2>
+        <h3><a @click="logout">Logout</a></h3>
       </header>
       <div id="content">
         <input @click="showAddDialog = true" id="add" class="buttons" type="button" name="creating" value="Додати новий пост">
@@ -18,9 +19,11 @@
           <h2>{{note.author}} | {{note.date}}</h2>
           <div id="functions">
             <h2>
-              <editable @id="transferElement" :author="note.author" :title="note.title" :text="note.text"></editable>
-              |
-              <removable @id="transferElement" :title="note.title"></removable>
+              <template v-if="author == note.author" >
+                <editable @id="transferElement" :author="note.author" :title="note.title" :text="note.text"></editable>
+                |
+                <removable @id="transferElement" :title="note.title"></removable>
+              </template>
             </h2>
           </div>
           <hr>
