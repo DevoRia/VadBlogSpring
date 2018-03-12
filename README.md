@@ -28,5 +28,8 @@ Java Spring Boot + Vue.js project
 ``` bash
 # Download Keycloak server from official site. unzip it, then 
 # Write in terminal
+#windows
 .../keycloak-3.4.3.Final/bin/standalone.bat -Djboss.socket.binding.port-offset=100
+#linux
+.../keycloak-3.4.3.Final/bin/sudo ./standalone.sh -Djboss.socket.binding.port-offset=100
 ```
