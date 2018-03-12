@@ -9,8 +9,9 @@
     <div id="app">
       <header>
         <h1><a href="#">VadBlog</a></h1>
-        <h2><a href="#">{{author}}</a></h2>
-        <h3><a @click="logout">Logout</a></h3>
+        <h3><a href="#">{{author}}</a>
+          |
+        <a @click="logout">Вийти</a></h3>
       </header>
       <div id="content">
         <input @click="showAddDialog = true" id="add" class="buttons" type="button" name="creating" value="Додати новий пост">
@@ -19,7 +20,7 @@
           <h2>{{note.author}} | {{note.date}}</h2>
           <div id="functions">
             <h2>
-              <template v-if="author == note.author" >
+              <template v-if="author == note.author || isAdmin" >
                 <editable @id="transferElement" :author="note.author" :title="note.title" :text="note.text"></editable>
                 |
                 <removable @id="transferElement" :title="note.title"></removable>
@@ -54,7 +55,7 @@
                   Ваше ім'я: <br>
                   <input type="text" name="author"  v-model="author" disabled><br>
                   Запис:<br>
-                  <textarea cols="40" rows="3" name="text"  v-model="text"></textarea>
+                  <textarea cols="30" rows="3" name="text"  v-model="text"></textarea>
 
                 </slot>
               </div>
@@ -131,7 +132,7 @@
                   Ваше ім'я:<br>
                   <input type="text" name="author" v-model="author" disabled><br>
                   Запис:<br>
-                  <textarea cols="40" rows="3" name="text" v-model="text"></textarea>
+                  <textarea cols="30" rows="3" name="text" v-model="text"></textarea>
 
                 </slot>
               </div>

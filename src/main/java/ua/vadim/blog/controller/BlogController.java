@@ -1,6 +1,5 @@
 package ua.vadim.blog.controller;
 
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
@@ -51,11 +50,12 @@ public class BlogController implements ControllerBehavior{
         String author = tokenManager.getUsername();
         Blog oldBlog = blogService.getBlogByTitle(title);
 
-        if (!(author.equals(oldBlog.getAuthor()))) return "Operation can't be success";
-
-        Blog blog = new Blog(title, author, text, oldBlog.getDate(), false);//lombock сам створить конструктор
-        this.blogService.updateBlog(blog);
-        return "Success";
+        if (author.equals(oldBlog.getAuthor()) || tokenManager.isAdmin()) {
+            Blog blog = new Blog(title, oldBlog.getAuthor(), text, oldBlog.getDate(), false);//lombock сам створить конструктор
+            this.blogService.updateBlog(blog);
+            return "Success";
+        }
+        return "Something was going wrong";
     }
 
     @CrossOrigin
@@ -64,10 +64,11 @@ public class BlogController implements ControllerBehavior{
         String author = tokenManager.getUsername();
         Blog oldBlog = blogService.getBlogByTitle(title);
 
-        if (!(author.equals(oldBlog.getAuthor()))) return "Operation can't be success";
-
-        this.blogService.removeBlog(title);
-        return "Success";
+        if (author.equals(oldBlog.getAuthor()) || tokenManager.isAdmin()) {
+            this.blogService.removeBlog(title);
+            return "Success";
+        }
+        return "Something was going wrong";
     }
 
 }

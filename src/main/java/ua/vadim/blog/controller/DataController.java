@@ -27,7 +27,7 @@ public class DataController {
         } catch (ServletException e) {
             System.out.println(String.valueOf(e).concat(" It's been exception"));
         }
-        return "redirect:/";
+        return "Success";
     }
 
     @CrossOrigin
@@ -35,5 +35,12 @@ public class DataController {
     public String getUsername () {
         return tokenManager.getUsername();
     }
+
+    @CrossOrigin
+    @RequestMapping(value = "/roleAdmin", method = RequestMethod.GET)
+    public Boolean isAdminByRole() {
+        return tokenManager.isAdmin();
+    }
+
 
 }

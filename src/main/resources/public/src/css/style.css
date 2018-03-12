@@ -8,13 +8,23 @@
 header{
   padding: 20px 0 20px 0;
   width: 100%;
+  color: white;
   background: #08745a;
 }
 
-header a{
+header h1{
   margin-left: 10%;
-  color: white;
+}
+
+header h3{
+  margin-left: 80%;
+  margin-bottom: 5px;
+  margin-top: -26px;
+}
+
+header a{
   font-family: "Segoe UI Black", sans-serif;
+  color: white;
   text-decoration: none;
 }
 
@@ -51,7 +61,7 @@ input#add{
 }
 
 #functions{
-  margin-left: 83%;
+  margin-left: 76%;
   margin-top: -7%;
   margin-bottom: 6%;
 }

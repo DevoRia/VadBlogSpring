@@ -75,10 +75,12 @@ var App = new Vue({
     editEndpoint: "http://localhost:8081/server/edit",
     usernameEndpoint: "http://localhost:8081/data/username",
     logoutEndpoint:"http://localhost:8081/data/logout",
+    adminEndpoint:"http://localhost:8081/data/roleAdmin",
     notes: [],
     showRemoveDialog: false, // видимість діалогового вікна для видалення
     showAddDialog: false,// видимість діалогового вікна для додавання
     showEditDialog: false,// видимість діалогового вікна для редагування
+    isAdmin: false,
     oldTitle: "",
     title: "",
     author: "",
@@ -148,6 +150,11 @@ var App = new Vue({
   	    this.author = response.bodyText;
   	  }), function (error) {}
     },
+    checkAdmin: function () {
+  	  this.$http.get(this.adminEndpoint).then(function (response) {
+  	    this.isAdmin = response.data;
+      })
+    },
     logout: function () {
   	  this.$http.get(this.logoutEndpoint).then(function (response) {
   	    location.assign("http://localhost:8081/")
@@ -157,6 +164,7 @@ var App = new Vue({
   created: function () {
      this.getAllPosts();
      this.getUserData();
+     this.checkAdmin();
   }
 
 });
