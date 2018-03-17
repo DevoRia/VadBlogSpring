@@ -6,7 +6,7 @@
 	<groupId>ua.vadim</groupId>
 	<artifactId>blog</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>blog</name>
 	<description>My own project for Spring Boot</description>
@@ -143,6 +143,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>vadblog-spring-boot</finalName>
 	</build>
 
 </project>

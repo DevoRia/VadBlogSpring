@@ -12,7 +12,7 @@ Java Spring Boot + Vue.js project
 * And RUN at localhost:8081 
 
   ![alt text](PicturesRM/setting_running.PNG)
-	![alt text](PicturesRM/new_spring.PNG)
+*	![alt text](PicturesRM/new_spring.PNG)
   ![alt text](PicturesRM/set_config.PNG)
   
   do it for ConfigServer and GRpcClient too.
