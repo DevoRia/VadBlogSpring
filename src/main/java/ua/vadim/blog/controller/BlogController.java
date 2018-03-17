@@ -15,6 +15,9 @@ import java.util.List;
 @RequestMapping("/server")
 public class BlogController implements ControllerBehavior{
 
+    private final String SUCCESS = "Success";
+    private final String FAILED = "Something was going wrong";
+
     private BlogService blogService;
     private TokenManager tokenManager;
 
@@ -39,7 +42,7 @@ public class BlogController implements ControllerBehavior{
         String author = tokenManager.getUsername();
         Blog blog = new Blog(title, author, text, new Date(), false);//lombock сам створить конструктор
         this.blogService.addBlog(blog);
-        return "Success";
+        return SUCCESS;
     }
 
     @CrossOrigin
@@ -53,9 +56,9 @@ public class BlogController implements ControllerBehavior{
         if (author.equals(oldBlog.getAuthor()) || tokenManager.isAdmin()) {
             Blog blog = new Blog(title, oldBlog.getAuthor(), text, oldBlog.getDate(), false);//lombock сам створить конструктор
             this.blogService.updateBlog(blog);
-            return "Success";
+            return SUCCESS;
         }
-        return "Something was going wrong";
+        return FAILED;
     }
 
     @CrossOrigin
@@ -66,9 +69,9 @@ public class BlogController implements ControllerBehavior{
 
         if (author.equals(oldBlog.getAuthor()) || tokenManager.isAdmin()) {
             this.blogService.removeBlog(title);
-            return "Success";
+            return SUCCESS;
         }
-        return "Something was going wrong";
+        return FAILED;
     }
 
 }

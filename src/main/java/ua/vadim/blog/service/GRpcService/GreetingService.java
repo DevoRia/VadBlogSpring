@@ -1,4 +1,4 @@
-package ua.vadim.blog.service;
+package ua.vadim.blog.service.GRpcService;
 
 import io.grpc.stub.StreamObserver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +7,7 @@ import ua.vadim.blog.GreetingGrpc;
 import ua.vadim.blog.HelloRequest;
 import ua.vadim.blog.HelloResponse;
 import ua.vadim.blog.entity.Blog;
+import ua.vadim.blog.service.BlogService;
 
 @Service
 public class GreetingService extends GreetingGrpc.GreetingImplBase {
@@ -16,7 +17,7 @@ public class GreetingService extends GreetingGrpc.GreetingImplBase {
 
     @Override
     public void greeting(HelloRequest request, StreamObserver<HelloResponse> responseObserver) {
-        System.out.println("GRPC Request: " + request.getTitle());
+        System.out.println("GRPC Request: ".concat(request.getTitle()));
         //Функції callback
         responseObserver.onNext(HelloResponse.newBuilder()
                 .setMessage(getMessage(request.getTitle()))

@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.vadim.blog.dao.BlogRepository;
 import ua.vadim.blog.entity.Blog;
 
-import java.util.Date;
 import java.util.List;
 
 @Service

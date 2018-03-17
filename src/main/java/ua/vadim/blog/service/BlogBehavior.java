@@ -1,6 +1,5 @@
 package ua.vadim.blog.service;
 
-import org.springframework.transaction.annotation.Transactional;
 import ua.vadim.blog.entity.Blog;
 
 import java.util.List;

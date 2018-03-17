@@ -1,4 +1,4 @@
-package ua.vadim.blog.service;
+package ua.vadim.blog.service.GRpcService;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
